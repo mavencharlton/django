@@ -10,8 +10,14 @@ from apps.routing.presentation.serializers import PlanRouteSerializer
 
 
 class RouteView(APIView):
+    """Single view handling both the UI and the API.
+
+    GET  /route/ — serves the Leaflet map UI
+    POST /route/ — accepts {start, end}, returns route + fuel stops + cost
+    """
 
     def get(self, request):
+        # Just render the map page — all the logic happens on POST
         return render(request, "routing/map.html")
 
     def post(self, request):
@@ -19,8 +25,9 @@ class RouteView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        t0     = time.perf_counter()
-        cmd    = PlanRouteCommand(**serializer.validated_data)
+        # Time the full service call for the meta response
+        t0 = time.perf_counter()
+        cmd = PlanRouteCommand(**serializer.validated_data)
         result = RouteService().plan(cmd)
         elapsed = round(time.perf_counter() - t0, 2)
 
@@ -34,6 +41,6 @@ class RouteView(APIView):
             "geometry":       result.geometry,
             "meta": {
                 "elapsed_seconds": elapsed,
-                "api_calls":       3,
+                "api_calls":       3,  # geocode start, geocode end, get route
             }
         })

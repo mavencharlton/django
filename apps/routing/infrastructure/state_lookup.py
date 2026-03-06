@@ -1,5 +1,10 @@
-# Offline US state bounding boxes — no API call needed
+# Offline US state bounding boxes.
+# Replaces reverse geocoding API calls — zero network requests,
+# instant lookup, works for any coordinate within the continental US.
+#
 # Format: 'STATE': (min_lon, min_lat, max_lon, max_lat)
+# Bounding boxes are approximate — sufficient for identifying which
+# state a highway waypoint falls in.
 
 STATE_BOUNDS = {
     "AL": (-88.47, 30.22, -84.89, 35.01),
@@ -54,7 +59,11 @@ STATE_BOUNDS = {
 
 
 def get_state_from_coords(lon: float, lat: float) -> str:
-    """Return US state abbreviation for given coordinates, no API call."""
+    """Return the US state abbreviation for a given coordinate.
+
+    Iterates state bounding boxes and returns the first match.
+    Returns empty string if no state matches (e.g. off-road coordinates).
+    """
     for state, (min_lon, min_lat, max_lon, max_lat) in STATE_BOUNDS.items():
         if min_lon <= lon <= max_lon and min_lat <= lat <= max_lat:
             return state
