@@ -37,7 +37,7 @@ templates/       → Leaflet map UI
 
 **1. Clone and create virtual environment**
 ```bash
-git clone <repo>
+git clone https://github.com/mavencharlton/django.git
 cd fuel-route
 python -m venv venv
 source venv/bin/activate
