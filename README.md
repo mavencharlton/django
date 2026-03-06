@@ -2,6 +2,10 @@
 
 A Django REST API that calculates the optimal (most cost-effective) fuel stops along a driving route within the USA.
 
+## Preview
+
+![Fuel Route Planner UI](docs/screenshots/ui-preview.png)
+
 ## What it does
 
 Given a start and end location, the API returns:
